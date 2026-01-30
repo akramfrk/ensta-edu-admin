@@ -1,14 +1,53 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Student, Teacher, Subject } from '@/types/school';
-import { mockStudents, mockTeachers, mockSubjects } from '@/data/mockData';
+
+const STORAGE_KEYS = {
+  students: 'school_students',
+  teachers: 'school_teachers',
+  subjects: 'school_subjects',
+};
+
+function loadFromStorage<T>(key: string): T[] {
+  try {
+    const data = localStorage.getItem(key);
+    if (data) {
+      const parsed = JSON.parse(data);
+      return parsed.map((item: T & { createdAt: string }) => ({
+        ...item,
+        createdAt: new Date(item.createdAt),
+      }));
+    }
+  } catch (e) {
+    console.error(`Error loading ${key} from storage:`, e);
+  }
+  return [];
+}
+
+function saveToStorage<T>(key: string, data: T[]): void {
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch (e) {
+    console.error(`Error saving ${key} to storage:`, e);
+  }
+}
+
+function generateUniqueId(): string {
+  return `${Date.now()}-${crypto.randomUUID()}`;
+}
 
 export function useStudents() {
-  const [students, setStudents] = useState<Student[]>(mockStudents);
+  const [students, setStudents] = useState<Student[]>(() => 
+    loadFromStorage<Student>(STORAGE_KEYS.students)
+  );
+
+  useEffect(() => {
+    saveToStorage(STORAGE_KEYS.students, students);
+  }, [students]);
 
   const addStudent = useCallback((student: Omit<Student, 'id' | 'createdAt'>) => {
     const newStudent: Student = {
       ...student,
-      id: crypto.randomUUID(),
+      id: generateUniqueId(),
       createdAt: new Date(),
     };
     setStudents(prev => [...prev, newStudent]);
@@ -31,12 +70,18 @@ export function useStudents() {
 }
 
 export function useTeachers() {
-  const [teachers, setTeachers] = useState<Teacher[]>(mockTeachers);
+  const [teachers, setTeachers] = useState<Teacher[]>(() => 
+    loadFromStorage<Teacher>(STORAGE_KEYS.teachers)
+  );
+
+  useEffect(() => {
+    saveToStorage(STORAGE_KEYS.teachers, teachers);
+  }, [teachers]);
 
   const addTeacher = useCallback((teacher: Omit<Teacher, 'id' | 'createdAt'>) => {
     const newTeacher: Teacher = {
       ...teacher,
-      id: crypto.randomUUID(),
+      id: generateUniqueId(),
       createdAt: new Date(),
     };
     setTeachers(prev => [...prev, newTeacher]);
@@ -59,12 +104,18 @@ export function useTeachers() {
 }
 
 export function useSubjects() {
-  const [subjects, setSubjects] = useState<Subject[]>(mockSubjects);
+  const [subjects, setSubjects] = useState<Subject[]>(() => 
+    loadFromStorage<Subject>(STORAGE_KEYS.subjects)
+  );
+
+  useEffect(() => {
+    saveToStorage(STORAGE_KEYS.subjects, subjects);
+  }, [subjects]);
 
   const addSubject = useCallback((subject: Omit<Subject, 'id' | 'createdAt'>) => {
     const newSubject: Subject = {
       ...subject,
-      id: crypto.randomUUID(),
+      id: generateUniqueId(),
       createdAt: new Date(),
     };
     setSubjects(prev => [...prev, newSubject]);
