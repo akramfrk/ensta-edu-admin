@@ -30,7 +30,7 @@ const subjectSchema = z.object({
   name: z.string().min(2, 'Subject name must be at least 2 characters').max(100),
   code: z.string().min(3, 'Code must be at least 3 characters').max(20),
   coefficient: z.coerce.number().min(1, 'Coefficient must be at least 1').max(10),
-  teacherId: z.string().min(1, 'Please select a teacher'),
+  teacher_id: z.string().min(1, 'Please select a teacher'),
 });
 
 type SubjectFormData = z.infer<typeof subjectSchema>;
@@ -58,7 +58,7 @@ export function SubjectForm({
       name: initialData?.name || '',
       code: initialData?.code || '',
       coefficient: initialData?.coefficient || 1,
-      teacherId: initialData?.teacherId || '',
+      teacher_id: initialData?.teacher_id || '',
     },
   });
 
@@ -121,7 +121,7 @@ export function SubjectForm({
             </div>
             <FormField
               control={form.control}
-              name="teacherId"
+              name="teacher_id"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Assigned Teacher</FormLabel>
@@ -134,7 +134,7 @@ export function SubjectForm({
                     <SelectContent>
                       {teachers.map((teacher) => (
                         <SelectItem key={teacher.id} value={teacher.id}>
-                          {teacher.firstName} {teacher.lastName} - {teacher.specialization}
+                          {teacher.first_name} {teacher.last_name} - {teacher.specialization}
                         </SelectItem>
                       ))}
                     </SelectContent>

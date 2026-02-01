@@ -26,9 +26,9 @@ export default function Teachers() {
       render: (teacher: Teacher) => (
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-success/10 text-xs font-semibold text-success">
-            {teacher.firstName[0]}{teacher.lastName[0]}
+            {teacher.first_name[0]}{teacher.last_name[0]}
           </div>
-          <span className="font-medium">{teacher.firstName} {teacher.lastName}</span>
+          <span className="font-medium">{teacher.first_name} {teacher.last_name}</span>
         </div>
       ),
     },
@@ -51,12 +51,12 @@ export default function Teachers() {
       ),
     },
     {
-      key: 'createdAt',
+      key: 'created_at',
       label: 'Joined',
       sortable: true,
       render: (teacher: Teacher) => (
         <span className="text-sm text-muted-foreground">
-          {format(new Date(teacher.createdAt), 'MMM d, yyyy')}
+          {format(new Date(teacher.created_at), 'MMM d, yyyy')}
         </span>
       ),
     },
@@ -79,31 +79,47 @@ export default function Teachers() {
     setDeleteOpen(true);
   };
 
-  const handleFormSubmit = (data: Omit<Teacher, 'id' | 'createdAt'>) => {
-    if (formMode === 'create') {
-      addTeacher(data);
+  const handleFormSubmit = async (data: Omit<Teacher, 'id' | 'created_at'>) => {
+    try {
+      if (formMode === 'create') {
+        await addTeacher(data);
+        toast({
+          title: 'Teacher Added',
+          description: `${data.first_name} ${data.last_name} has been added successfully.`,
+        });
+      } else if (selectedTeacher) {
+        await updateTeacher(selectedTeacher.id, data);
+        toast({
+          title: 'Teacher Updated',
+          description: `${data.first_name} ${data.last_name} has been updated successfully.`,
+        });
+      }
+    } catch (error) {
       toast({
-        title: 'Teacher Added',
-        description: `${data.firstName} ${data.lastName} has been added successfully.`,
-      });
-    } else if (selectedTeacher) {
-      updateTeacher(selectedTeacher.id, data);
-      toast({
-        title: 'Teacher Updated',
-        description: `${data.firstName} ${data.lastName} has been updated successfully.`,
+        title: 'Error',
+        description: 'An error occurred. Please try again.',
+        variant: 'destructive',
       });
     }
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (selectedTeacher) {
-      deleteTeacher(selectedTeacher.id);
-      toast({
-        title: 'Teacher Deleted',
-        description: 'The teacher has been removed from the system.',
-      });
-      setDeleteOpen(false);
-      setSelectedTeacher(null);
+      try {
+        await deleteTeacher(selectedTeacher.id);
+        toast({
+          title: 'Teacher Deleted',
+          description: 'The teacher has been removed from the system.',
+        });
+        setDeleteOpen(false);
+        setSelectedTeacher(null);
+      } catch (error) {
+        toast({
+          title: 'Error',
+          description: 'Failed to delete teacher. Please try again.',
+          variant: 'destructive',
+        });
+      }
     }
   };
 
@@ -127,7 +143,7 @@ export default function Teachers() {
       <DataTable
         data={teachers}
         columns={columns}
-        searchKeys={['firstName', 'lastName', 'email', 'specialization']}
+        searchKeys={['first_name', 'last_name', 'email', 'specialization']}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
@@ -147,7 +163,7 @@ export default function Teachers() {
         onConfirm={handleDeleteConfirm}
         title="Delete Teacher"
         description="Are you sure you want to delete this teacher? This action cannot be undone."
-        itemName={selectedTeacher ? `${selectedTeacher.firstName} ${selectedTeacher.lastName}` : undefined}
+        itemName={selectedTeacher ? `${selectedTeacher.first_name} ${selectedTeacher.last_name}` : undefined}
       />
     </div>
   );

@@ -20,8 +20,8 @@ import { Button } from '@/components/ui/button';
 import { Teacher } from '@/types/school';
 
 const teacherSchema = z.object({
-  firstName: z.string().min(2, 'First name must be at least 2 characters').max(50),
-  lastName: z.string().min(2, 'Last name must be at least 2 characters').max(50),
+  first_name: z.string().min(2, 'First name must be at least 2 characters').max(50),
+  last_name: z.string().min(2, 'Last name must be at least 2 characters').max(50),
   email: z.string().email('Invalid email address'),
   specialization: z.string().min(2, 'Specialization must be at least 2 characters'),
 });
@@ -46,8 +46,8 @@ export function TeacherForm({
   const form = useForm<TeacherFormData>({
     resolver: zodResolver(teacherSchema),
     defaultValues: {
-      firstName: initialData?.firstName || '',
-      lastName: initialData?.lastName || '',
+      first_name: initialData?.first_name || '',
+      last_name: initialData?.last_name || '',
       email: initialData?.email || '',
       specialization: initialData?.specialization || '',
     },
@@ -72,7 +72,7 @@ export function TeacherForm({
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="firstName"
+                name="first_name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>First Name</FormLabel>
@@ -85,7 +85,7 @@ export function TeacherForm({
               />
               <FormField
                 control={form.control}
-                name="lastName"
+                name="last_name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Last Name</FormLabel>

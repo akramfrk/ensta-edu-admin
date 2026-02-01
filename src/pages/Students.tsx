@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/DataTable';
@@ -20,11 +20,11 @@ export default function Students() {
 
   const columns = [
     {
-      key: 'studentNumber',
+      key: 'student_number',
       label: 'Student #',
       sortable: true,
       render: (student: Student) => (
-        <span className="font-mono text-sm">{student.studentNumber}</span>
+        <span className="font-mono text-sm">{student.student_number}</span>
       ),
     },
     {
@@ -34,9 +34,9 @@ export default function Students() {
       render: (student: Student) => (
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
-            {student.firstName[0]}{student.lastName[0]}
+            {student.first_name[0]}{student.last_name[0]}
           </div>
-          <span className="font-medium">{student.firstName} {student.lastName}</span>
+          <span className="font-medium">{student.first_name} {student.last_name}</span>
         </div>
       ),
     },
@@ -59,12 +59,12 @@ export default function Students() {
       ),
     },
     {
-      key: 'createdAt',
+      key: 'created_at',
       label: 'Enrolled',
       sortable: true,
       render: (student: Student) => (
         <span className="text-sm text-muted-foreground">
-          {format(new Date(student.createdAt), 'MMM d, yyyy')}
+          {format(new Date(student.created_at), 'MMM d, yyyy')}
         </span>
       ),
     },
@@ -87,31 +87,47 @@ export default function Students() {
     setDeleteOpen(true);
   };
 
-  const handleFormSubmit = (data: Omit<Student, 'id' | 'createdAt'>) => {
-    if (formMode === 'create') {
-      addStudent(data);
+  const handleFormSubmit = async (data: Omit<Student, 'id' | 'created_at'>) => {
+    try {
+      if (formMode === 'create') {
+        await addStudent(data);
+        toast({
+          title: 'Student Added',
+          description: `${data.first_name} ${data.last_name} has been added successfully.`,
+        });
+      } else if (selectedStudent) {
+        await updateStudent(selectedStudent.id, data);
+        toast({
+          title: 'Student Updated',
+          description: `${data.first_name} ${data.last_name} has been updated successfully.`,
+        });
+      }
+    } catch (error) {
       toast({
-        title: 'Student Added',
-        description: `${data.firstName} ${data.lastName} has been added successfully.`,
-      });
-    } else if (selectedStudent) {
-      updateStudent(selectedStudent.id, data);
-      toast({
-        title: 'Student Updated',
-        description: `${data.firstName} ${data.lastName} has been updated successfully.`,
+        title: 'Error',
+        description: 'An error occurred. Please try again.',
+        variant: 'destructive',
       });
     }
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (selectedStudent) {
-      deleteStudent(selectedStudent.id);
-      toast({
-        title: 'Student Deleted',
-        description: 'The student has been removed from the system.',
-      });
-      setDeleteOpen(false);
-      setSelectedStudent(null);
+      try {
+        await deleteStudent(selectedStudent.id);
+        toast({
+          title: 'Student Deleted',
+          description: 'The student has been removed from the system.',
+        });
+        setDeleteOpen(false);
+        setSelectedStudent(null);
+      } catch (error) {
+        toast({
+          title: 'Error',
+          description: 'Failed to delete student. Please try again.',
+          variant: 'destructive',
+        });
+      }
     }
   };
 
@@ -135,7 +151,7 @@ export default function Students() {
       <DataTable
         data={students}
         columns={columns}
-        searchKeys={['firstName', 'lastName', 'email', 'studentNumber']}
+        searchKeys={['first_name', 'last_name', 'email', 'student_number']}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
@@ -155,7 +171,7 @@ export default function Students() {
         onConfirm={handleDeleteConfirm}
         title="Delete Student"
         description="Are you sure you want to delete this student? This action cannot be undone."
-        itemName={selectedStudent ? `${selectedStudent.firstName} ${selectedStudent.lastName}` : undefined}
+        itemName={selectedStudent ? `${selectedStudent.first_name} ${selectedStudent.last_name}` : undefined}
       />
     </div>
   );

@@ -27,10 +27,10 @@ import {
 import { Student } from '@/types/school';
 
 const studentSchema = z.object({
-  firstName: z.string().min(2, 'First name must be at least 2 characters').max(50),
-  lastName: z.string().min(2, 'Last name must be at least 2 characters').max(50),
+  first_name: z.string().min(2, 'First name must be at least 2 characters').max(50),
+  last_name: z.string().min(2, 'Last name must be at least 2 characters').max(50),
   email: z.string().email('Invalid email address'),
-  studentNumber: z.string().min(5, 'Student number must be at least 5 characters'),
+  student_number: z.string().min(5, 'Student number must be at least 5 characters'),
   level: z.string().min(1, 'Please select a level'),
 });
 
@@ -56,10 +56,10 @@ export function StudentForm({
   const form = useForm<StudentFormData>({
     resolver: zodResolver(studentSchema),
     defaultValues: {
-      firstName: initialData?.firstName || '',
-      lastName: initialData?.lastName || '',
+      first_name: initialData?.first_name || '',
+      last_name: initialData?.last_name || '',
       email: initialData?.email || '',
-      studentNumber: initialData?.studentNumber || '',
+      student_number: initialData?.student_number || '',
       level: initialData?.level || '',
     },
   });
@@ -83,7 +83,7 @@ export function StudentForm({
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="firstName"
+                name="first_name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>First Name</FormLabel>
@@ -96,7 +96,7 @@ export function StudentForm({
               />
               <FormField
                 control={form.control}
-                name="lastName"
+                name="last_name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Last Name</FormLabel>
@@ -124,7 +124,7 @@ export function StudentForm({
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="studentNumber"
+                name="student_number"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Student Number</FormLabel>

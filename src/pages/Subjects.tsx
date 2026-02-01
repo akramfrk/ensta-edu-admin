@@ -19,9 +19,10 @@ export default function Subjects() {
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
 
-  const getTeacherName = (teacherId: string) => {
+  const getTeacherName = (teacherId: string | null) => {
+    if (!teacherId) return 'Unassigned';
     const teacher = teachers.find((t) => t.id === teacherId);
-    return teacher ? `${teacher.firstName} ${teacher.lastName}` : 'Unassigned';
+    return teacher ? `${teacher.first_name} ${teacher.last_name}` : 'Unassigned';
   };
 
   const columns = [
@@ -52,25 +53,25 @@ export default function Subjects() {
       ),
     },
     {
-      key: 'teacherId',
+      key: 'teacher_id',
       label: 'Assigned Teacher',
       sortable: true,
       render: (subject: Subject) => (
         <div className="flex items-center gap-2">
           <div className="flex h-6 w-6 items-center justify-center rounded-full bg-success/10 text-xs font-semibold text-success">
-            {getTeacherName(subject.teacherId).split(' ').map(n => n[0]).join('')}
+            {getTeacherName(subject.teacher_id).split(' ').map(n => n[0]).join('')}
           </div>
-          <span className="text-muted-foreground">{getTeacherName(subject.teacherId)}</span>
+          <span className="text-muted-foreground">{getTeacherName(subject.teacher_id)}</span>
         </div>
       ),
     },
     {
-      key: 'createdAt',
+      key: 'created_at',
       label: 'Created',
       sortable: true,
       render: (subject: Subject) => (
         <span className="text-sm text-muted-foreground">
-          {format(new Date(subject.createdAt), 'MMM d, yyyy')}
+          {format(new Date(subject.created_at), 'MMM d, yyyy')}
         </span>
       ),
     },
@@ -93,31 +94,47 @@ export default function Subjects() {
     setDeleteOpen(true);
   };
 
-  const handleFormSubmit = (data: Omit<Subject, 'id' | 'createdAt'>) => {
-    if (formMode === 'create') {
-      addSubject(data);
+  const handleFormSubmit = async (data: Omit<Subject, 'id' | 'created_at'>) => {
+    try {
+      if (formMode === 'create') {
+        await addSubject(data);
+        toast({
+          title: 'Subject Added',
+          description: `${data.name} has been added successfully.`,
+        });
+      } else if (selectedSubject) {
+        await updateSubject(selectedSubject.id, data);
+        toast({
+          title: 'Subject Updated',
+          description: `${data.name} has been updated successfully.`,
+        });
+      }
+    } catch (error) {
       toast({
-        title: 'Subject Added',
-        description: `${data.name} has been added successfully.`,
-      });
-    } else if (selectedSubject) {
-      updateSubject(selectedSubject.id, data);
-      toast({
-        title: 'Subject Updated',
-        description: `${data.name} has been updated successfully.`,
+        title: 'Error',
+        description: 'An error occurred. Please try again.',
+        variant: 'destructive',
       });
     }
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (selectedSubject) {
-      deleteSubject(selectedSubject.id);
-      toast({
-        title: 'Subject Deleted',
-        description: 'The subject has been removed from the system.',
-      });
-      setDeleteOpen(false);
-      setSelectedSubject(null);
+      try {
+        await deleteSubject(selectedSubject.id);
+        toast({
+          title: 'Subject Deleted',
+          description: 'The subject has been removed from the system.',
+        });
+        setDeleteOpen(false);
+        setSelectedSubject(null);
+      } catch (error) {
+        toast({
+          title: 'Error',
+          description: 'Failed to delete subject. Please try again.',
+          variant: 'destructive',
+        });
+      }
     }
   };
 

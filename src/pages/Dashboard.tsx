@@ -30,17 +30,17 @@ export default function Dashboard() {
   // Get teachers with their subject counts
   const teachersWithSubjects = teachers.map(teacher => ({
     ...teacher,
-    subjectCount: subjects.filter(s => s.teacherId === teacher.id).length
+    subjectCount: subjects.filter(s => s.teacher_id === teacher.id).length
   }));
 
   // Recent students (last 5 added)
   const recentStudents = [...students]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 5);
 
   // Calculate subject distribution by teacher specialization
   const specializationStats = teachers.reduce((acc, teacher) => {
-    const count = subjects.filter(s => s.teacherId === teacher.id).length;
+    const count = subjects.filter(s => s.teacher_id === teacher.id).length;
     acc[teacher.specialization] = (acc[teacher.specialization] || 0) + count;
     return acc;
   }, {} as Record<string, number>);
@@ -134,11 +134,11 @@ export default function Dashboard() {
               >
                 <div className="flex items-center gap-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 font-semibold text-primary">
-                    {student.firstName[0]}{student.lastName[0]}
+                    {student.first_name[0]}{student.last_name[0]}
                   </div>
                   <div>
                     <p className="font-medium">
-                      {student.firstName} {student.lastName}
+                      {student.first_name} {student.last_name}
                     </p>
                     <p className="text-sm text-muted-foreground">{student.email}</p>
                   </div>
@@ -146,7 +146,7 @@ export default function Dashboard() {
                 <div className="text-right">
                   <p className="text-sm font-medium">{student.level}</p>
                   <p className="text-xs text-muted-foreground">
-                    {format(new Date(student.createdAt), 'MMM d, yyyy')}
+                    {format(new Date(student.created_at), 'MMM d, yyyy')}
                   </p>
                 </div>
               </div>
@@ -197,11 +197,11 @@ export default function Dashboard() {
                   >
                     <div className="flex items-center gap-3">
                       <div className="flex h-8 w-8 items-center justify-center rounded-full bg-success/10 text-sm font-semibold text-success">
-                        {teacher.firstName[0]}
+                        {teacher.first_name[0]}
                       </div>
                       <div>
                         <span className="font-medium">
-                          {teacher.firstName} {teacher.lastName}
+                          {teacher.first_name} {teacher.last_name}
                         </span>
                         <p className="text-xs text-muted-foreground">{teacher.specialization}</p>
                       </div>

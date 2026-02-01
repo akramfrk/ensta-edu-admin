@@ -1,20 +1,20 @@
 export interface Student {
   id: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
-  studentNumber: string;
+  student_number: string;
   level: string;
-  createdAt: Date;
+  created_at: string;
 }
 
 export interface Teacher {
   id: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
   specialization: string;
-  createdAt: Date;
+  created_at: string;
 }
 
 export interface Subject {
@@ -22,9 +22,9 @@ export interface Subject {
   name: string;
   code: string;
   coefficient: number;
-  teacherId: string;
+  teacher_id: string | null;
   teacher?: Teacher;
-  createdAt: Date;
+  created_at: string;
 }
 
 export interface DashboardStats {
