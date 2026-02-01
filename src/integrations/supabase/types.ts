@@ -14,7 +14,98 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      students: {
+        Row: {
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          level: string
+          student_number: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          level: string
+          student_number: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          level?: string
+          student_number?: string
+        }
+        Relationships: []
+      }
+      subjects: {
+        Row: {
+          code: string
+          coefficient: number
+          created_at: string
+          id: string
+          name: string
+          teacher_id: string | null
+        }
+        Insert: {
+          code: string
+          coefficient?: number
+          created_at?: string
+          id?: string
+          name: string
+          teacher_id?: string | null
+        }
+        Update: {
+          code?: string
+          coefficient?: number
+          created_at?: string
+          id?: string
+          name?: string
+          teacher_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subjects_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teachers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      teachers: {
+        Row: {
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          specialization: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          specialization: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          specialization?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
