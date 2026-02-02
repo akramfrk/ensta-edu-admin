@@ -9,16 +9,16 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
-      if (window.innerWidth < 1024) {
-        setSidebarOpen(false);
-      } else {
-        setSidebarOpen(true);
+      const mobile = window.innerWidth < 1024;
+      setIsMobile(mobile);
+      if (mobile) {
+        setMobileOpen(false);
       }
     };
 
@@ -30,39 +30,40 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Mobile overlay */}
-      {isMobile && sidebarOpen && (
+      {isMobile && mobileOpen && (
         <div
-          className="fixed inset-0 z-30 bg-foreground/20 backdrop-blur-sm lg:hidden"
-          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 z-30 bg-foreground/20 backdrop-blur-sm"
+          onClick={() => setMobileOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <div
-        className={cn(
-          "transition-transform duration-300 lg:translate-x-0",
-          isMobile && !sidebarOpen ? "-translate-x-full" : "translate-x-0"
-        )}
-      >
-        <Sidebar />
-      </div>
+      <Sidebar
+        collapsed={collapsed}
+        onCollapse={setCollapsed}
+        isMobile={isMobile}
+        isOpen={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+      />
 
       {/* Main content */}
       <div className={cn(
-        "transition-all duration-300",
-        sidebarOpen ? "lg:ml-64" : "lg:ml-20"
+        "min-h-screen transition-all duration-300",
+        isMobile ? "ml-0" : (collapsed ? "ml-20" : "ml-64")
       )}>
         {/* Mobile header */}
-        <header className="sticky top-0 z-20 flex h-16 items-center gap-4 border-b border-border bg-background/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:hidden">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-          <h1 className="text-lg font-semibold">EduAdmin</h1>
-        </header>
+        {isMobile && (
+          <header className="sticky top-0 z-20 flex h-16 items-center gap-4 border-b border-border bg-background/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setMobileOpen(true)}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+            <h1 className="text-lg font-semibold">EduAdmin</h1>
+          </header>
+        )}
 
         {/* Page content */}
         <main className="p-6 lg:p-8">
