@@ -1,6 +1,6 @@
-# Higher School Management System - Technical Report
+# School Management System - Technical Report
 
-## 📋 Table of Contents
+## Table of Contents
 
 1. [Project Overview](#project-overview)
 2. [Technology Stack](#technology-stack)
@@ -13,11 +13,22 @@
 9. [DBMS Considerations](#dbms-considerations)
 10. [Application Architecture](#application-architecture)
 11. [CRUD Operations](#crud-operations)
-12. [Future Enhancements](#future-enhancements)
 
 ---
 
-## 📌 Project Overview
+## Project Information
+
+### Project Team
+- **FERKIOUI Akram**
+- **BOUSSEKINE Mohamed Ismail**
+- **HAMMOUTI Walid**
+
+### Supervised By
+- **Ms BENDOUDA Djamila**
+
+---
+
+## Project Overview
 
 The **Higher School Management System** is a full-stack web application designed to streamline administrative operations in educational institutions. It provides a comprehensive admin dashboard for managing:
 
@@ -27,41 +38,40 @@ The **Higher School Management System** is a full-stack web application designed
 
 ### Key Features
 
-- ✅ Full CRUD operations for all entities
-- ✅ Real-time dashboard with dynamic statistics
-- ✅ Search, sort, and pagination for data tables
-- ✅ Responsive design for mobile and desktop
-- ✅ Form validation with error handling
-- ✅ Auto-generated unique identifiers (UUID)
+- Full CRUD operations for all entities
+- Real-time dashboard with dynamic statistics
+- Search, sort, and pagination for data tables
+- Responsive design for mobile and desktop
+- Form validation with error handling
+- Auto-generated unique identifiers (UUID)
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
-| Layer | Technology | Purpose |
-|-------|------------|---------|
-| **Frontend** | React 18 + TypeScript | UI components and state management |
-| **Styling** | Tailwind CSS | Utility-first styling framework |
-| **Build Tool** | Vite | Fast development server and bundling |
-| **Routing** | React Router DOM | Client-side navigation |
-| **Forms** | React Hook Form + Zod | Form handling and validation |
-| **State** | React Hooks (useState, useCallback) | Local state management |
-| **UI Components** | shadcn/ui | Accessible component library |
+| Layer             | Technology                          | Purpose                              |
+| ----------------- | ----------------------------------- | ------------------------------------ |
+| **Frontend**      | React 18 + TypeScript               | UI components and state management   |
+| **Styling**       | Tailwind CSS                        | Utility-first styling framework      |
+| **Build Tool**    | Vite                                | Fast development server and bundling |
+| **Routing**       | React Router DOM                    | Client-side navigation               |
+| **Forms**         | React Hook Form + Zod               | Form handling and validation         |
+| **State**         | React Hooks (useState, useCallback) | Local state management               |
+| **UI Components** | shadcn/ui                           | Accessible component library         |
 
 ### Recommended Production Stack
 
 For a production-ready application with persistent data:
 
-| Layer | Recommended Technology |
-|-------|----------------------|
+| Layer        | Recommended Technology                  |
+| ------------ | --------------------------------------- |
 | **Database** | PostgreSQL (via Supabase/Lovable Cloud) |
-| **ORM** | Prisma |
-| **Backend** | Supabase Edge Functions |
-| **Authentication** | Supabase Auth |
+| **ORM**      | Prisma                                  |
+| **Backend**  | Supabase Edge Functions                 |
 
 ---
 
-## 🗄️ Database Schema Design
+## Database Schema Design
 
 ### Entity Definitions
 
@@ -142,12 +152,12 @@ CREATE INDEX idx_student_subjects_subject ON student_subjects(subject_id);
 
 ---
 
-## 📊 Entity-Relationship Diagram
+## Entity-Relationship Diagram
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                    HIGHER SCHOOL MANAGEMENT SYSTEM                       │
-│                         Entity-Relationship Diagram                       │
+│                    HIGHER SCHOOL MANAGEMENT SYSTEM                      │
+│                      Entity-Relationship Diagram                        │
 └─────────────────────────────────────────────────────────────────────────┘
 
     ┌─────────────────┐          ┌─────────────────┐
@@ -183,7 +193,7 @@ CREATE INDEX idx_student_subjects_subject ON student_subjects(subject_id);
 
 ---
 
-## 📐 Data Types & Constraints
+## Data Types & Constraints
 
 ### TypeScript Interface Definitions
 
@@ -249,11 +259,11 @@ const subjectSchema = z.object({
 
 ---
 
-## 🔄 Database Normalization
+## Database Normalization
 
 The database schema follows **Third Normal Form (3NF)** to ensure data integrity and minimize redundancy.
 
-### First Normal Form (1NF) ✅
+### First Normal Form (1NF)
 
 - All attributes contain atomic (indivisible) values
 - Each column contains values of a single type
@@ -262,12 +272,12 @@ The database schema follows **Third Normal Form (3NF)** to ensure data integrity
 
 **Example Compliance:**
 ```
-✅ Student name split into firstName and lastName (atomic)
-✅ Each student has a unique id and studentNumber
-✅ No arrays or nested structures in any column
+- Student name split into firstName and lastName (atomic)
+- Each student has a unique id and studentNumber
+- No arrays or nested structures in any column
 ```
 
-### Second Normal Form (2NF) ✅
+### Second Normal Form (2NF)
 
 - Satisfies 1NF
 - All non-key attributes are fully dependent on the primary key
@@ -275,12 +285,12 @@ The database schema follows **Third Normal Form (3NF)** to ensure data integrity
 
 **Example Compliance:**
 ```
-✅ In student_subjects table, grade depends on the combination 
+- In student_subjects table, grade depends on the combination 
    of (student_id, subject_id), not on either alone
-✅ All student attributes depend entirely on student.id
+- All student attributes depend entirely on student.id
 ```
 
-### Third Normal Form (3NF) ✅
+### Third Normal Form (3NF)
 
 - Satisfies 2NF
 - No transitive dependencies
@@ -288,9 +298,9 @@ The database schema follows **Third Normal Form (3NF)** to ensure data integrity
 
 **Example Compliance:**
 ```
-✅ Teacher specialization stored in teachers table, not duplicated in subjects
-✅ Subject references teacher_id (FK) rather than storing teacher details
-✅ No derived/calculated columns stored (statistics computed at runtime)
+- Teacher specialization stored in teachers table, not duplicated in subjects
+- Subject references teacher_id (FK) rather than storing teacher details
+- No derived/calculated columns stored (statistics computed at runtime)
 ```
 
 ### Normalization Benefits
@@ -304,7 +314,7 @@ The database schema follows **Third Normal Form (3NF)** to ensure data integrity
 
 ---
 
-## 🔗 Relationships & Cardinality
+## Relationships & Cardinality
 
 ### 1. Teacher → Subject (One-to-Many)
 
@@ -351,7 +361,7 @@ On Delete: CASCADE (enrollment records removed with student/subject)
 
 ---
 
-## ⚡ Database Optimization Strategies
+## Database Optimization Strategies
 
 ### 1. Indexing Strategy
 
@@ -416,7 +426,7 @@ SELECT
 
 ---
 
-## 🗃️ DBMS Considerations
+## DBMS Considerations
 
 ### Current Implementation (Frontend-Only)
 
@@ -477,7 +487,7 @@ CREATE POLICY "Allow admin full access" ON students
 
 ---
 
-## 🏗️ Application Architecture
+## Application Architecture
 
 ### Component Structure
 
@@ -543,7 +553,7 @@ export function useStudents() {
 
 ---
 
-## 📝 CRUD Operations
+## CRUD Operations
 
 ### Create Operation
 
@@ -602,51 +612,28 @@ const handleDelete = (id: string) => {
 
 ---
 
-## 🚀 Future Enhancements
+## Team Task Distribution
 
-### Phase 1: Backend Integration
-- [ ] Connect to PostgreSQL via Supabase
-- [ ] Implement Row-Level Security
-- [ ] Add real-time subscriptions
-- [ ] Enable data persistence
+To ensure effective collaboration and balanced workload, the project tasks were distributed among the team members as follows:
 
-### Phase 2: Authentication
-- [ ] Admin login/logout
-- [ ] Role-based access control
-- [ ] Session management
-- [ ] Password reset flow
+### FERKIOUI Akram
+- Global system design and architecture
+- Database schema design (tables, constraints, relationships)
+- Database normalization (1NF, 2NF, 3NF)
+- Entity-Relationship Diagram (ERD) and UML modeling
+- Database optimization strategies and indexing
+- Technical report structuring and review
 
-### Phase 3: Advanced Features
-- [ ] Student enrollment in subjects
-- [ ] Grade management system
-- [ ] Attendance tracking
-- [ ] Report generation (PDF)
-- [ ] Data export (CSV/Excel)
+### BOUSSEKINE Mohamed Ismail
+- Frontend application structure and routing
+- Student and Teacher management modules
+- Implementation of CRUD operations
+- Form handling and validation using React Hook Form and Zod
+- User interface logic and interaction handling
 
-### Phase 4: Analytics
-- [ ] Enrollment trends over time
-- [ ] Grade distribution charts
-- [ ] Teacher workload analysis
-- [ ] Performance dashboards
-
----
-
-## 📚 References
-
-1. **PostgreSQL Documentation**: https://www.postgresql.org/docs/
-2. **Database Normalization**: Codd, E.F. (1970) "A Relational Model of Data"
-3. **React Documentation**: https://react.dev/
-4. **Tailwind CSS**: https://tailwindcss.com/docs
-5. **Supabase Documentation**: https://supabase.com/docs
-
----
-
-## 👨‍💻 Author
-
-**Higher School Management System**  
-Version: 1.0.0  
-Date: January 2026
-
----
-
-*This report was prepared as part of the academic project submission for the Database Management Systems course.*
+### HAMMOUTI Walid
+- Subject and enrollment (Student–Subject) management
+- Dashboard statistics and data aggregation
+- Integration of UI components (shadcn/ui)
+- Testing and validation of application features
+- Final documentation verification and formatting
