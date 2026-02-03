@@ -1,73 +1,266 @@
-# Welcome to your Lovable project
+# Higher School Management System
 
-## Project info
+**Technical & Database-Oriented Project**
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Project Overview
 
-## How can I edit this code?
+The **Higher School Management System (HSMS)** is a web-based application developed to support **academic and administrative data management** within a higher education institution.
 
-There are several ways of editing your application.
+The system provides an **admin dashboard** that allows administrators to manage:
 
-**Use Lovable**
+- Students
+    
+- Teachers
+    
+- Subjects
+    
+- Student–Subject enrollments
+    
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+This project is primarily focused on **database design, normalization, relationships, and CRUD operations**, following software engineering and database administration principles.
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## Key Features
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- Full **CRUD operations** for all entities
+    
+- Student enrollment management
+    
+- Teacher specialization tracking
+    
+- Subject management with coefficients
+    
+- Many-to-many relationship between students and subjects
+    
+- Real-time dashboard statistics
+    
+- Search, sorting, and pagination
+    
+- Form validation with error handling
+    
+- Responsive admin interface
+    
+- Auto-generated unique identifiers (UUID)
+    
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## Technology Stack
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Frontend
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- **React 18**
+    
+- **TypeScript**
+    
+- **Vite** (build tool)
+    
+- **Tailwind CSS** (styling)
+    
+- **shadcn/ui** (UI components)
+    
+- **React Router DOM** (client-side routing)
+    
+- **React Hook Form + Zod** (form handling and validation)
+    
 
-# Step 3: Install the necessary dependencies.
-npm i
+### State Management
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+- React Hooks (`useState`, `useCallback`)
+    
+- Local in-memory state (current implementation)
+    
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Recommended Production Stack (Database-Oriented)
 
-**Use GitHub Codespaces**
+For a production-ready and persistent system, the following stack is recommended:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+|Layer|Technology|
+|---|---|
+|Database|PostgreSQL|
+|ORM|Prisma|
+|Backend|Supabase Edge Functions|
+|Hosting|Supabase / Lovable Cloud|
 
-## What technologies are used for this project?
+---
 
-This project is built with:
+## Database Design
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Core Entities
 
-## How can I deploy this project?
+- **Student**
+    
+- **Teacher**
+    
+- **Subject**
+    
+- **Student_Subject** (junction table)
+    
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+The database is designed using a **relational model** and normalized to **Third Normal Form (3NF)** to ensure data integrity and avoid redundancy.
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+### Relationships & Cardinality
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- **Teacher → Subject** : One-to-Many (1:N)  
+    One teacher can teach multiple subjects.
+    
+- **Student ↔ Subject** : Many-to-Many (M:N)  
+    Implemented using a junction table (`student_subjects`).
+    
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+
+## Database Constraints & Integrity
+
+- UUID primary keys
+    
+- Unique constraints on:
+    
+    - Emails
+        
+    - Student numbers
+        
+    - Subject codes
+        
+- Foreign key constraints with cascading rules
+    
+- Check constraints for:
+    
+    - Academic level
+        
+    - Subject coefficient range
+        
+- Indexed columns for query optimization
+    
+
+---
+
+## Database Normalization
+
+The schema follows **3NF**:
+
+### First Normal Form (1NF)
+
+- Atomic values
+    
+- No repeating groups
+    
+- Unique primary keys
+    
+
+### Second Normal Form (2NF)
+
+- No partial dependencies
+    
+- All non-key attributes depend on the full primary key
+    
+
+### Third Normal Form (3NF)
+
+- No transitive dependencies
+    
+- Teacher information stored only in `teachers`
+    
+- Subjects reference teachers via foreign keys
+    
+
+---
+
+## Application Architecture
+
+The system follows a **layered architecture**:
+
+1. **Presentation Layer**
+    
+    - React UI components
+        
+    - Admin dashboard
+        
+2. **Application Layer**
+    
+    - CRUD logic
+        
+    - Validation
+        
+    - Business rules
+        
+3. **Data Layer**
+    
+    - Relational database schema
+        
+    - ORM-based access (recommended)
+        
+
+---
+
+
+## CRUD Operations
+
+- **Create**: Add students, teachers, subjects, enrollments
+    
+- **Read**: Display lists with pagination and search
+    
+- **Update**: Edit existing records
+    
+- **Delete**: Remove records with cascade handling
+    
+
+Current implementation uses **local state** for data storage (non-persistent), intended for academic demonstration.
+
+---
+
+## Limitations (Current Version)
+
+- No persistent database connection
+    
+- Data lost on page refresh
+    
+- Single-user environment
+    
+- No authentication
+    
+
+---
+
+## Future Improvements
+
+- PostgreSQL integration
+    
+- Persistent data storage
+    
+- Authentication & role-based access
+    
+- Attendance and grade management
+    
+- Reporting and data export
+    
+- Performance optimization (indexes, caching)
+    
+
+---
+
+## Academic Context
+
+This project was developed as part of a **Database Administration / Software Engineering assignment**, with emphasis on:
+
+- Database modeling
+    
+- UML and ER diagrams
+    
+- Normalization
+    
+- CRUD-based administrative systems
+    
+
+---
+
+## Author
+
+**Akram**  
+Artificial Intelligence & Applications  
+Higher School of Advanced Technologies (ENSTA)
